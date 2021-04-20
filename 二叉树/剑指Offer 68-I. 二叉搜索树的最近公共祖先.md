@@ -48,3 +48,32 @@ var lowestCommonAncestor = function(root, p, q) {
     }
 };
 ```
+
+## 其他解法
+最近基本都在做二叉树的题，看到二叉树就会不禁想到遍历，这个就造成了思维定势：二叉树就用递归来解决
+
+我们在仔细想想：这道题是二叉搜索树，那么二叉搜索树的特点是什么呢？左子节点的值比父节点的值小，右子树的值比父节点的值大，而且采用中序遍历时，遍历的结果是有序的，从小到大排列。
+
+既然是要找p或q节点，那么在一个有序的队列里进行查找，**二分法查找**不是一个有效的方法嘛？
+
+```javascript
+var lowestCommonAncestor = function(root, p, q) {
+    let min = Math.min(p.val, q.val);
+    let max = Math.max(p.val, q.val);
+
+    let lca = root;
+    while(root !== null) {
+        // 最近公共祖先
+        if (root.val >= min && root.val <= max) {
+            lca = root;
+            break;
+        } else if (root.val > max) {
+            root = root.left;
+        } else if (root.val < min) {
+            root = root.right;
+        }
+    }
+    return lca;
+};
+```
+
