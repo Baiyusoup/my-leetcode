@@ -36,3 +36,16 @@ var majorityElement = function(nums) {
 **摩尔投票法**
 核心理念为 票数正负抵消 。此方法时间和空间复杂度分别为 O(N) 和 O(1) 
 
+```javascript
+var majorityElement = function(nums) {
+    let votes = 0, x = 0;
+    nums.forEach((v, i) => {
+        votes === 0 && x = v;
+        votes += x === v ? 1 : -1;
+    })
+    return x;
+};
+```
+
+摩尔投票法使用场景是找出占半数以上的那类东西，简单来说就是不同的东西就会相互抵消，那么到最后剩下来的肯定是数量占半数以上的那类东西
+
