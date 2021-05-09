@@ -19,7 +19,7 @@ TAG:
 
 使用单调栈，因为单调栈实现了随意入栈、出栈情况下的O(1)时间获取栈内最小值。
 
-稍为改动一下：窗口滑动时删除的是列表首部元素。
+稍为改动一下：使用单调队列，窗口滑动时删除的是列表首部元素。
 
 窗口对象的数据接口为双端队列，本题使用单调队列。每轮遍历时保证单调队列deque：
 1. deque内仅包含窗口内元素=> 滑动窗口滑动时，删除元素num(i-1)
@@ -35,18 +35,23 @@ TAG:
 
 
 ```javascript
-const deque = [], n = nums.length, res = [];
-for(let i = 1 - k, j = 0; j < n; i++, j++) {
-  if (i > 0 && deque[0] === nums[i-1]) deque.shift();
-
-  while(deque.length && deque[deque.length - 1] < nums[j]) {
-    deque.pop();
-  }
-
-  deque.push(nums[j]);
-
-  if (i >= 0) {
-    res[i] = deque[0];
-  }
+const deque = [], res = [],n = nums.length;
+// 为形成窗口之前
+for(let i = 0; i < k; i++) {
+    while(deque.length && deque[deque.length-1] < nums[i]) deque.pop();
+    deque.push(nums[i]);
 }
+
+res.push(deque[0]);
+
+// 从第二个窗口开始
+for(let i = k; i < n; i++) {
+  // 如果当前deque首部元素等于nums[i-k]的话，说明首部元素不属于这个窗口，需要删除
+  if (deque[0] === nums[i - k]) deque.shift();
+  while(deque.length && deque[deque.length - 1] < nums[i]) deque.pop();
+  deque.push(nums[i])
+
+  res.push(deque[0]);
+}
+return res;
 ```
